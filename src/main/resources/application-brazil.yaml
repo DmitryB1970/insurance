@@ -1,0 +1,8 @@
+country: Brazil
+
+currency: rial
+
+coefficient:
+  robbery: 0.05
+  medical: 0.03
+
