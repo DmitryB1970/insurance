@@ -1,19 +1,22 @@
 package com.javaacademy.insurance;
 
 import com.javaacademy.insurance.contract.InsuranceContract;
+import com.javaacademy.insurance.contract.InsuranceContractNumberGenerator;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class Archive {
 
-    private Map<String, InsuranceContract> archiveOfContracts;
+    private InsuranceContractNumberGenerator insuranceContractNumberGenerator;
+    @Getter
+    private Map<String, InsuranceContract> contracts = new HashMap<>();
 
-    public Map<String, InsuranceContract> putInArchive(InsuranceContract insuranceContract) {
-        archiveOfContracts.put(insuranceContract.getContractNumber(), insuranceContract);
-        return archiveOfContracts;
+    public void addContract(InsuranceContract contract) {
+        contracts.put(contract.getContractNumber(), contract);
     }
 }
 

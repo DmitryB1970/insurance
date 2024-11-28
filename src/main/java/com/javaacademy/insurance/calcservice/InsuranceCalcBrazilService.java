@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import static java.math.BigDecimal.valueOf;
 
 @Profile("brazil")
 public class InsuranceCalcBrazilService implements InsuranceCalcService {
@@ -17,18 +17,24 @@ public class InsuranceCalcBrazilService implements InsuranceCalcService {
     @Value("${coefficient.robbery}")
     private BigDecimal coefficientForRobbery;
 
-    @Value("${coefficient.medical")
+    @Value("${coefficient.medical}")
     private BigDecimal coefficientForMedical;
+
+    private BigDecimal result;
 
     @Override
     public BigDecimal contractSum(BigDecimal coverageSum, InsuranceType insuranceType) {
         if (insuranceType == InsuranceType.ROBBERY_PROTECTION) {
-            coverageSum = coverageSum.multiply(coefficientForRobbery)
-                    .add(ADD_PAYMENT_FOR_ROBBERY);
+            result = coverageSum
+                    .multiply(coefficientForRobbery)
+                    .add(ADD_PAYMENT_FOR_ROBBERY)
+                    .setScale(0, RoundingMode.HALF_UP);
         } else if (insuranceType == InsuranceType.MEDICAL_INSURANCE) {
-            coverageSum = coverageSum.multiply(coefficientForMedical)
-                    .add(ADD_PAYMENT_FOR_MEDICAL);
+            result = coverageSum
+                    .multiply(coefficientForMedical)
+                    .add(ADD_PAYMENT_FOR_MEDICAL)
+                    .setScale(0, RoundingMode.HALF_UP);
         }
-        return coverageSum;
+        return result;
     }
 }

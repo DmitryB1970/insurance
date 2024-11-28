@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 @Profile("japan")
@@ -13,19 +14,27 @@ public class InsuranceCalcJapanService implements InsuranceCalcService {
     private static final BigDecimal ADD_PAYMENT_FOR_ROBBERY = BigDecimal.valueOf(10_000);
     private static final BigDecimal ADD_PAYMENT_FOR_MEDICAL = BigDecimal.valueOf(12_000);
 
-    @Value("${app.coefficient.robbery}")
-    private BigDecimal coefficientForRobbery;
+    @Value("${coefficient.robbery}")
+    private BigDecimal coefficientRobbery;
 
-    @Value("${app.coefficient.medical")
-    private BigDecimal coefficientForMedical;
+    @Value("${coefficient.medical}")
+    private BigDecimal coefficientMedical;
+
+    private BigDecimal result;
 
     @Override
     public BigDecimal contractSum(BigDecimal coverageSum, InsuranceType insuranceType) {
         if (insuranceType == InsuranceType.ROBBERY_PROTECTION) {
-            coverageSum.multiply(coefficientForRobbery).add(ADD_PAYMENT_FOR_ROBBERY);
+            result = coverageSum
+                    .multiply(coefficientRobbery)
+                    .add(ADD_PAYMENT_FOR_ROBBERY)
+                    .setScale(0, RoundingMode.HALF_UP);
         } else if (insuranceType == InsuranceType.MEDICAL_INSURANCE) {
-            coverageSum.multiply(coefficientForMedical).add(ADD_PAYMENT_FOR_MEDICAL);
+            result = coverageSum
+                    .multiply(coefficientMedical)
+                    .add(ADD_PAYMENT_FOR_MEDICAL)
+                    .setScale(0, RoundingMode.HALF_UP);
         }
-        return coverageSum;
+        return result;
     }
 }

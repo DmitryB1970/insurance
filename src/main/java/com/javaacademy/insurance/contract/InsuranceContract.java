@@ -1,8 +1,8 @@
 package com.javaacademy.insurance.contract;
 
 import com.javaacademy.insurance.InsuranceType;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -10,28 +10,19 @@ import java.math.BigDecimal;
 
 
 @Getter
+@RequiredArgsConstructor
 public class InsuranceContract {
 
-    private String contractNumber;
-    private BigDecimal contractSum;
-    private BigDecimal coverageSum;
-    @Value("${app.currency}")
-    private String currency;
-    private String fio;
-    @Value("${app.country}")
-    private String country;
-    private InsuranceType type;
+    private final String contractNumber;
+    private final BigDecimal contractSum;
+    private final BigDecimal coverageSum;
+    @Value("${currency}")
+    private final String currency;
+    private final String fio;
+    @Value("${country}")
+    private final String country;
+    private final InsuranceType type;
     @Setter
-    private InsuranceContractStatus status;
+    private InsuranceContractStatus status = InsuranceContractStatus.UNPAID_CONTRACT;
 
-    public InsuranceContract(String contractNumber, BigDecimal contractSum, String country, BigDecimal coverageSum, String currency, String fio, InsuranceContractStatus status, InsuranceType type) {
-        this.contractNumber = contractNumber;
-        this.contractSum = contractSum;
-        this.country = country;
-        this.coverageSum = coverageSum;
-        this.currency = currency;
-        this.fio = fio;
-        this.status = status;
-        this.type = type;
-    }
 }

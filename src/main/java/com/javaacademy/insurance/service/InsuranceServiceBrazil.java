@@ -17,16 +17,21 @@ public class InsuranceServiceBrazil implements InsuranceService {
     private InsuranceContract contract;
 
     @Override
-    public InsuranceContract contractWithUnpaidStatus(BigDecimal coverageSum, String fio, InsuranceType type) {
+    public InsuranceContract offerInsurance(BigDecimal coverageSum, String fio, InsuranceType type) {
         contract = new InsuranceContract(
                 insuranceContractNumberGenerator.contractUniqueNumberGenerator(),
-                insuranceCalcJapanService.contractSum(coverageSum, type), contract.getCountry(), coverageSum, contract.getCurrency(), fio,  InsuranceContractStatus.UNPAID_CONTRACT, type);
+                insuranceCalcJapanService.contractSum(coverageSum, type),
+                coverageSum,
+                contract.getCurrency(),
+                fio,
+                contract.getCountry(),
+                type);
         return contract;
     }
 
     @Override
-    public InsuranceContract contractWithPaidStatus(String contractNumber) {
-        if (contractNumber.equals(null)) {
+    public InsuranceContract payForInsurance(String contractNumber) {
+        if (contractNumber.isEmpty()) {
             throw new RuntimeException("такого договора не существует");
         }
         contract.setStatus(InsuranceContractStatus.PAID_CONTRACT);
